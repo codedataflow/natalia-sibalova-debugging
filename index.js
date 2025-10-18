@@ -10,7 +10,7 @@ const correctMessage = document.getElementById('correct');
 
 let targetNumber;
 let attempts = 0;
-const maxNumberOfAttempts = 5;
+let maxNumberOfAttempts = 5;
 
 // Returns a random number from min (inclusive) to max (exclusive)
 // Usage:
@@ -23,13 +23,14 @@ function getRandomNumber(min, max) {
 }
 
 function checkGuess() {
+  // ToDo: Add range validation from 1 to 99
   // Get value from guess input element
   const guess = parseInt(guessInput.value, 10);
   attempts = attempts + 1;
 
   hideAllMessages();
 
-  if (guess === targetNumber) {
+  if (guess === targetNumber) { // ugadal !!!
     numberOfGuessesMessage.style.display = '';
     numberOfGuessesMessage.innerHTML = `You made ${attempts} guesses`;
 
@@ -37,13 +38,11 @@ function checkGuess() {
 
     submitButton.disabled = true;
     guessInput.disabled = true;
-  }
-
-  if (guess !== targetNumber) {
+  } else {                      // ne ugadal !!!
     if (guess < targetNumber) {
       tooLowMessage.style.display = '';
     } else {
-      tooLowMessage.style.display = '';
+      tooHighMessage.style.display = '';
     }
 
     const remainingAttempts = maxNumberOfAttempts - attempts;
@@ -51,10 +50,12 @@ function checkGuess() {
     numberOfGuessesMessage.style.display = '';
     numberOfGuessesMessage.innerHTML = `You guessed ${guess}. <br> ${remainingAttempts} guesses remaining`;
   }
-
-  if (attempts ==== maxNumberOfAttempts) {
+  
+  // max attempts reached !!!
+  if (attempts === maxNumberOfAttempts) {
     submitButton.disabled = true;
     guessInput.disabled = true;
+    maxGuessesMessage.style.display = '';
   }
 
   guessInput.value = '';
@@ -63,18 +64,23 @@ function checkGuess() {
 }
 
 function hideAllMessages() {
-  for (let elementIndex = 0; elementIndex <= messages.length; elementIndex++) {
+  for (let elementIndex = 0; elementIndex < messages.length; elementIndex++) {
     messages[elementIndex].style.display = 'none';
   }
 }
 
-funtion setup() {
+function setup() {
   // Get random number
   targetNumber = getRandomNumber(1, 100);
+
+  // for debugging purposes
   console.log(`target number: ${targetNumber}`);
 
   // Reset number of attempts
-  maxNumberOfAttempts = 0;
+  maxNumberOfAttempts = 5;
+  
+  // Reset attempts
+  attempts = 0;
 
   // Enable the input and submit button
   submitButton.disabeld = false;
@@ -82,6 +88,9 @@ funtion setup() {
 
   hideAllMessages();
   resetButton.style.display = 'none';
+
+  submitButton.disabled = false;
+  guessInput.disabled = false;
 }
 
 submitButton.addEventListener('click', checkGuess);
